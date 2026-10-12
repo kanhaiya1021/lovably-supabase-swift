@@ -1,24 +1,31 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Storefront — Shop the collection" },
+      { name: "description", content: "Browse our products and shop securely." },
+      { property: "og:title", content: "Storefront — Shop the collection" },
+      { property: "og:description", content: "Browse our products and shop securely." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background px-6 text-center">
+      <h1 className="text-4xl font-semibold tracking-tight text-foreground">Storefront</h1>
+      <p className="max-w-md text-muted-foreground">
+        The shop is being set up. Create an account to get started.
+      </p>
+      <div className="flex gap-3">
+        <Button asChild><Link to="/auth">Sign in</Link></Button>
+        <Button asChild variant="outline"><Link to="/account">My account</Link></Button>
+      </div>
+    </main>
   );
 }
