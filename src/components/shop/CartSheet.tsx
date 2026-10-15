@@ -64,12 +64,37 @@ export function CartSheet() {
               ))}
             </ul>
             <div className="space-y-4 border-t bg-secondary/50 p-6">
+              {verification.status === "verifying" && (
+                <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2 className="h-4 w-4 animate-spin" /> Verifying stock &amp; prices…
+                </p>
+              )}
+              {verification.status === "verified" && (
+                <div className="space-y-1">
+                  <p className="flex items-center gap-2 text-sm text-primary">
+                    <ShieldCheck className="h-4 w-4" /> Verified by server — live stock confirmed
+                  </p>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Delivery</span>
+                    <span>{verification.deliveryFee === 0 ? "Free" : formatPrice(verification.deliveryFee, verification.currency)}</span>
+                  </div>
+                  <div className="flex justify-between text-lg">
+                    <span>Server total</span>
+                    <span className="font-semibold">{formatPrice(verification.total, verification.currency)}</span>
+                  </div>
+                </div>
+              )}
+              {(verification.status === "issue" || verification.status === "error") && (
+                <p className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" /> {verification.message}
+                </p>
+              )}
               <div className="flex justify-between text-lg">
                 <span>Subtotal</span>
                 <span className="font-semibold">{formatPrice(subtotal)}</span>
               </div>
               <p className="text-xs text-muted-foreground">Final prices, tax and delivery are confirmed at checkout.</p>
-              <Button className="w-full" size="lg" disabled>Checkout — coming soon</Button>
+              <Button className="w-full" size="lg" disabled={verifying}>Checkout — coming soon</Button>
             </div>
           </>
         )}
