@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/catalog";
 import { useCartVerification } from "@/lib/cart-verify";
+import { Link } from "@tanstack/react-router";
 
 export const FREE_SHIPPING_AT = 2999;
 
@@ -94,7 +95,13 @@ export function CartSheet() {
                 <span className="font-semibold">{formatPrice(subtotal)}</span>
               </div>
               <p className="text-xs text-muted-foreground">Final prices, tax and delivery are confirmed at checkout.</p>
-              <Button className="w-full" size="lg" disabled={verifying}>Checkout — coming soon</Button>
+              {verification.status === "verified" ? (
+                <Button asChild className="w-full" size="lg">
+                  <Link to="/checkout" onClick={() => setOpen(false)}>Checkout</Link>
+                </Button>
+              ) : (
+                <Button className="w-full" size="lg" disabled>Checkout</Button>
+              )}
             </div>
           </>
         )}
