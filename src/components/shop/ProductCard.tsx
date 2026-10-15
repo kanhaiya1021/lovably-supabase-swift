@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCart } from "@/lib/cart";
-import { formatPrice, type CatalogProduct } from "@/lib/catalog";
+import { formatPrice, type CatalogProduct, type CatalogVariant } from "@/lib/catalog";
 
 function stockLabel(available: number) {
   if (available <= 0) return { text: "Sold out", variant: "secondary" as const };
