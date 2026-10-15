@@ -1,15 +1,18 @@
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Loader2, ShieldCheck, AlertTriangle } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/catalog";
+import { useCartVerification } from "@/lib/cart-verify";
 
 export const FREE_SHIPPING_AT = 2999;
 
 export function CartSheet() {
   const { lines, open, setOpen, subtotal, setQty, remove, count } = useCart();
   const remaining = Math.max(0, FREE_SHIPPING_AT - subtotal);
+  const verification = useCartVerification(lines, open);
+  const verifying = verification.status === "verifying";
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
