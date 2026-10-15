@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCart } from "@/lib/cart";
-import { formatPrice, type CatalogProduct } from "@/lib/catalog";
+import { formatPrice, type CatalogProduct, type CatalogVariant } from "@/lib/catalog";
 
 function stockLabel(available: number) {
   if (available <= 0) return { text: "Sold out", variant: "secondary" as const };
@@ -13,14 +13,19 @@ function stockLabel(available: number) {
 }
 
 export function ProductCard({ product }: { product: CatalogProduct }) {
+  const first = product.variants[0];
+  if (!first) return null;
+  return <ProductCardInner product={product} first={first} />;
+}
+
+function ProductCardInner({ product, first }: { product: CatalogProduct; first: CatalogVariant }) {
   const { add, setOpen } = useCart();
   const [quick, setQuick] = useState(false);
-  const [variantId, setVariantId] = useState(product.variants[0].id);
-  const variant = product.variants.find((v) => v.id === variantId) ?? product.variants[0];
-  const first = product.variants[0];
+  const [variantId, setVariantId] = useState(first.id);
+  const variant = product.variants.find((v) => v.id === variantId) ?? first;
   const stock = stockLabel(first.available);
 
-  const addToCart = (v = variant) => {
+  const addToCart = (v: CatalogVariant = variant) => {
     add({
       variantId: v.id, productName: product.name, variantName: v.name, price: v.price,
       currency: product.currency, image: product.image, maxQuantity: v.available, demo: product.demo,
