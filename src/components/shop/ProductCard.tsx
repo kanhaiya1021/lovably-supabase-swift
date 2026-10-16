@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Eye, ShoppingBag, Star } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -76,7 +77,7 @@ function ProductCardInner({ product, first }: { product: CatalogProduct; first: 
           </div>
 
           {/* Quick Action Floating Overlay */}
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100">
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100">
             <Button
               size="sm"
               variant="secondary"
@@ -105,7 +106,7 @@ function ProductCardInner({ product, first }: { product: CatalogProduct; first: 
           </div>
 
           <h3 className="mt-2 font-display text-base font-medium leading-snug line-clamp-1 group-hover:text-primary transition-colors">
-            {product.name}
+            <Link to="/products/$productId" params={{ productId: product.id }} className="after:absolute after:inset-0 after:content-['']">{product.name}</Link>
           </h3>
 
           <div className="mt-2 flex items-baseline gap-2">
@@ -122,7 +123,7 @@ function ProductCardInner({ product, first }: { product: CatalogProduct; first: 
           <Button
             variant="outline"
             size="sm"
-            className="mt-3 w-full gap-2 rounded-lg font-medium transition-colors hover:bg-primary hover:text-primary-foreground"
+            className="relative z-20 mt-3 w-full gap-2 rounded-lg font-medium transition-colors hover:bg-primary hover:text-primary-foreground"
             disabled={first.available <= 0}
             onClick={() => (product.variants.length > 1 ? setQuick(true) : addToCart(first))}
           >

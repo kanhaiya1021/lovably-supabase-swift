@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { ArrowLeft, Minus, Plus, ShoppingBag, Truck, ShieldCheck, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/shop/SiteHeader";
+import { SiteFooter } from "@/components/shop/SiteFooter";
 import { CartSheet } from "@/components/shop/CartSheet";
 import { useCart, MAX_QTY } from "@/lib/cart";
 import { catalogQuery, formatPrice } from "@/lib/catalog";
@@ -120,6 +121,7 @@ function ProductPage() {
           </div>
         </div>
       </main>
+      <SiteFooter />
       <CartSheet />
     </div>
   );
