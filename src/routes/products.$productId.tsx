@@ -45,9 +45,9 @@ function ProductPage() {
   const { data } = useSuspenseQuery(catalogQuery);
   const product = data.products.find((p) => p.id === productId)!;
   const { add, setOpen } = useCart();
-  const [variantId, setVariantId] = useState(product.variants[0].id);
+  const [variantId, setVariantId] = useState(product.variants[0]!.id);
   const [qty, setQty] = useState(1);
-  const variant = product.variants.find((v) => v.id === variantId) ?? product.variants[0];
+  const variant = (product.variants.find((v) => v.id === variantId) ?? product.variants[0])!;
   const max = Math.min(MAX_QTY, variant.available);
 
   const addToCart = () => {
