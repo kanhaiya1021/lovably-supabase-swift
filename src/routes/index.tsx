@@ -207,7 +207,77 @@ function Index() {
           </div>
         </div>
       </section>
-            {/* 1. VISUAL CATEGORIES SHOWCASE */}
+      
+
+
+      {/* Catalog & Filter Section */}
+      <section id="catalog" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-20">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-wider text-primary">Curated Catalog</span>
+            <h2 className="mt-1 font-display text-3xl font-semibold sm:text-4xl">Explore our Collection</h2>
+          </div>
+          <div className="relative w-full max-w-xs">
+            <Search className="absolute left-3.5 top-1/2 -mt-2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search ceramics, throws..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="h-10 rounded-full pl-10 bg-muted/40 text-sm focus-visible:ring-primary/40"
+            />
+          </div>
+        </div>
+
+        {/* Category Filter Pills */}
+        <div className="mt-6 flex flex-wrap items-center gap-2 border-b border-border/40 pb-4">
+          <Button
+            size="sm"
+            variant={cat === null ? "default" : "ghost"}
+            onClick={() => setCat(null)}
+            className="rounded-full text-xs"
+          >
+            All Items ({data.products.length})
+          </Button>
+          {data.categories.map((c) => (
+            <Button
+              key={c.id}
+              size="sm"
+              variant={cat === c.id ? "default" : "ghost"}
+              onClick={() => setCat(c.id)}
+              className="rounded-full text-xs"
+            >
+              {c.name}
+            </Button>
+          ))}
+        </div>
+
+        {/* Products Grid */}
+        <div className="mt-8">
+          {shown.length === 0 ? (
+            <div className="rounded-3xl border border-dashed border-border p-16 text-center">
+              <p className="text-base text-muted-foreground">No pieces match your search or filter.</p>
+              <Button
+                variant="outline"
+                className="mt-4 rounded-full"
+                onClick={() => {
+                  setCat(null);
+                  setSearchTerm("");
+                }}
+              >
+                Reset filters
+              </Button>
+            </div>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {shown.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 1. VISUAL CATEGORIES SHOWCASE */}
       <section className="border-b border-border/40 bg-muted/20 py-16">
         <div className="mx-auto max-w-6xl px-6">
           <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
@@ -356,114 +426,6 @@ function Index() {
             ))}
           </div>
         </div>
-      </section>
-
-
-      {/* Catalog & Filter Section */}
-      <section id="catalog" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-20">
-        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary">Curated Catalog</span>
-            <h2 className="mt-1 font-display text-3xl font-semibold sm:text-4xl">Explore our Collection</h2>
-          </div>
-          <div className="relative w-full max-w-xs">
-            <Search className="absolute left-3.5 top-1/2 -mt-2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search ceramics, throws..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-10 rounded-full pl-10 bg-muted/40 text-sm focus-visible:ring-primary/40"
-            />
-          </div>
-        </div>
-
-        {/* Category Filter Pills */}
-        <div className="mt-6 flex flex-wrap items-center gap-2 border-b border-border/40 pb-4">
-          <Button
-            size="sm"
-            variant={cat === null ? "default" : "ghost"}
-            onClick={() => setCat(null)}
-            className="rounded-full text-xs"
-          >
-            All Items ({data.products.length})
-          </Button>
-          {data.categories.map((c) => (
-            <Button
-              key={c.id}
-              size="sm"
-              variant={cat === c.id ? "default" : "ghost"}
-              onClick={() => setCat(c.id)}
-              className="rounded-full text-xs"
-            >
-              {c.name}
-            </Button>
-          ))}
-        </div>
-
-        {/* Products Grid */}
-        <div className="mt-8">
-          {shown.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-border p-16 text-center">
-              <p className="text-base text-muted-foreground">No pieces match your search or filter.</p>
-              <Button
-                variant="outline"
-                className="mt-4 rounded-full"
-                onClick={() => {
-                  setCat(null);
-                  setSearchTerm("");
-                }}
-              >
-                Reset filters
-              </Button>
-            </div>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {shown.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-
-      <section id="features" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <h2 className="mb-8 font-display text-3xl text-center">Crafted for Generations</h2>
-        <p className="mb-6 text-lg text-muted-foreground">
-          Handmade with care, supported by artisans, and built to last. Zero plastic packaging, fair wages, and timeless design.
-        </p>
-        <ul className="mt-6 space-y-3">
-          <li className="flex items-start gap-3">
-            <Check className="h-5 w-5 shrink-0 text-primary" />
-            <span>Generational craftsmanship</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <Check className="h-5 w-5 shrink-0 text-primary" />
-            <span>Artisan support</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <Check className="h-5 w-5 shrink-0 text-primary" />
-            <span>Zero plastic packaging</span>
-          </li>
-        </ul>
-        <Card className="relative overflow-hidden">
-          <div className="absolute top-4 left-4">
-            <Badge variant="secondary" className="h-4 w-4">
-              Trending Now
-            </Badge>
-          </div>
-          <img
-            src={candleImg}
-            alt="Amber Glass Candle"
-            className="w-full h-auto object-cover aspect-[4/5] md:max-h-[400px]"
-          />
-          <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-card/90 to-transparent">
-            <p className="font-medium">Oatmeal Wool Throw</p>
-            <Button size="sm" className="mt-2">
-              Quick view
-            </Button>
-          </div>
-        </Card>
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-24 md:py-32">
