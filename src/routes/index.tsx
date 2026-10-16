@@ -5,11 +5,17 @@ import { toast } from "sonner";
 import {
   ArrowRight,
   Check,
+  ChevronDown,
   Clock,
+  Compass,
   CreditCard,
+  Heart,
+  HelpCircle,
   Instagram,
+  Layers,
   Lock,
   Mail,
+  PackageCheck,
   Phone,
   RefreshCw,
   Search,
@@ -19,8 +25,6 @@ import {
   StarHalf,
   Truck,
   X,
-  Youtube,
-  Linkedin,
   Zap,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +41,8 @@ import { SiteFooter } from "@/components/shop/SiteFooter";
 import { catalogQuery, type CatalogProduct } from "@/lib/catalog";
 import throwImg from "@/assets/p-throw.jpg";
 import candleImg from "@/assets/p-candle.jpg";
+import basketImg from "@/assets/p-basket.jpg";
+import mugImg from "@/assets/p-mug.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -201,6 +207,157 @@ function Index() {
           </div>
         </div>
       </section>
+            {/* 1. VISUAL CATEGORIES SHOWCASE */}
+      <section className="border-b border-border/40 bg-muted/20 py-16">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-primary">Browse By Space</span>
+              <h2 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">Curated Collections</h2>
+            </div>
+            <p className="max-w-md text-sm text-muted-foreground">
+              Hand-selected natural textures crafted to bring grounded calmness into your daily rituals.
+            </p>
+          </div>
+
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {[
+              { name: "Ceramics & Mugs", desc: "Hand-thrown stoneware", img: mugImg, filter: "Ceramics" },
+              { name: "Organic Textiles", desc: "Handspun flax & wool", img: throwImg, filter: "Textiles" },
+              { name: "Aromatherapy", desc: "Pure soy & beeswax", img: candleImg, filter: "Candles" },
+              { name: "Artisan Baskets", desc: "Woven river grass", img: basketImg, filter: "Decor" },
+            ].map((item, idx) => (
+              <a
+                key={idx}
+                href="#catalog"
+                onClick={() => {
+                  const match = data.categories.find((c) => c.name.toLowerCase().includes(item.filter.toLowerCase()));
+                  if (match) setCat(match.id);
+                }}
+                className="group relative overflow-hidden rounded-2xl border border-border/50 bg-card p-3 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+              >
+                <div className="relative aspect-square overflow-hidden rounded-xl bg-muted">
+                  <img
+                    src={item.img}
+                    alt={item.name}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-80" />
+                  <div className="absolute bottom-3 left-3 right-3 text-white">
+                    <p className="font-display text-sm font-medium leading-tight">{item.name}</p>
+                    <p className="text-[11px] text-white/80">{item.desc}</p>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* 2. THE ARTISAN STORY & IMPACT BENTO */}
+      <section id="features" className="scroll-mt-16 border-b border-border/40 py-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3.5 py-1 text-xs font-medium text-primary">
+              <Sparkles className="h-3 w-3" /> Rooted in Heritage
+            </span>
+            <h2 className="mt-3 font-display text-3xl font-semibold sm:text-4xl">
+              Crafted Slowly. Made for Generations.
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              Every curve, glaze, and thread carries the touch of authentic artisans across traditional Indian craft clusters.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 md:grid-cols-12">
+            {/* Story Card Left (7 cols) */}
+            <div className="flex flex-col justify-between rounded-3xl border border-border/60 bg-gradient-to-br from-card via-card to-muted/30 p-8 md:col-span-7">
+              <div>
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">Ethical Sourcing</span>
+                <h3 className="mt-4 font-display text-2xl font-semibold">Fair Wages & Zero Carbon Middlemen</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Unlike mass production factories, we partner directly with independent potters and weavers in Khurja, Maheshwar, and Jaipur. We preserve ancestral craft lineages while funding safe workshop conditions.
+                </p>
+              </div>
+
+              <div className="mt-8 grid grid-cols-3 gap-4 border-t border-border/50 pt-6">
+                <div>
+                  <p className="font-display text-2xl font-bold text-primary">50+</p>
+                  <p className="text-xs text-muted-foreground">Master Artisans</p>
+                </div>
+                <div>
+                  <p className="font-display text-2xl font-bold text-primary">100%</p>
+                  <p className="text-xs text-muted-foreground">Plastic-Free Pack</p>
+                </div>
+                <div>
+                  <p className="font-display text-2xl font-bold text-primary">₹0</p>
+                  <p className="text-xs text-muted-foreground">Hidden Fees</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Visual Quote Card Right (5 cols) */}
+            <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-card p-8 md:col-span-5">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <Heart className="h-6 w-6" />
+              </div>
+              <h3 className="mt-5 font-display text-xl font-medium">"Imperfection is the signature of human hands."</h3>
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                Small variations in glaze density and hand-thrown curves mean no two pieces are identical. Your mug or throw is uniquely yours.
+              </p>
+              <div className="mt-6 flex items-center gap-3 rounded-2xl bg-muted/50 p-3">
+                <PackageCheck className="h-5 w-5 text-emerald-500" />
+                <span className="text-xs font-medium">Safe transit wooden crates & recycled paper honeycomb packaging</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. FREQUENTLY ASKED QUESTIONS */}
+      <section className="border-b border-border/40 py-24">
+        <div className="mx-auto max-w-4xl px-6">
+          <div className="text-center">
+            <span className="text-xs font-semibold uppercase tracking-wider text-primary">Got Questions?</span>
+            <h2 className="mt-1 font-display text-3xl font-semibold sm:text-4xl">Frequently Asked Questions</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Everything you need to know about materials, delivery, and returns.</p>
+          </div>
+
+          <div className="mt-12 space-y-4">
+            {[
+              {
+                q: "Are the ceramic mugs microwave and dishwasher safe?",
+                a: "Yes! All our ceramics are fired at cone 10 (above 1200°C) with lead-free, food-safe glazes. They are safe for microwave, oven, and dishwasher use, though handwashing keeps the matte finish looking brand new.",
+              },
+              {
+                q: "How does shipping and safe transit work for fragile items?",
+                a: "We ship all ceramics in custom molded honeycomb paper and double-walled biodegradable boxes. In the rare case of transit damage, just send a photo to our support within 48 hours for an instant replacement.",
+              },
+              {
+                q: "What is your return & exchange policy?",
+                a: "We offer an easy 7-day return window on all unused items in original condition. Simply open your My Account page or message our support.",
+              },
+              {
+                q: "Do you offer gifting packaging?",
+                a: "Yes, you can mark any order as a gift during checkout. We include a handwritten artisan card with zero price tags on the package.",
+              },
+            ].map((faq, idx) => (
+              <details
+                key={idx}
+                className="group rounded-2xl border border-border/60 bg-card p-5 transition-all open:border-primary/40 open:shadow-sm"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between font-medium text-foreground">
+                  <span className="text-base font-medium">{faq.q}</span>
+                  <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 group-open:rotate-180" />
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground border-t border-border/30 pt-3">
+                  {faq.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
 
       {/* Catalog & Filter Section */}
       <section id="catalog" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-20">
