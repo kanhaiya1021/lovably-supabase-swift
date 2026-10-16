@@ -89,100 +89,186 @@ function Index() {
       <SiteHeader />
       <CartSheet />
 
-      <section className="relative mx-auto max-w-6xl px-6 py-24 md:py-32 overflow-hidden">
-        <div className="grid items-center gap-8 md:gap-12 md:grid-cols-2">
-          <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5">
-              <div className="h-2 w-2 rounded-full bg-primary" />
-              <span className="text-xs font-medium text-primary">Handcrafted & Curated</span>
-            </div>
-            <h1 className="font-display text-4xl font-semibold leading-tight tracking-tight md:text-5xl lg:text-6xl">
-              Elevate Everyday Living with Timeless Craft
-            </h1>
-            <p className="mt-6 max-w-md text-base text-muted-foreground leading-relaxed md:text-lg">
-              Discover authentic design, sustainable materials, and fast pan-India delivery. Each piece is handcrafted to elevate your everyday experience.
-            </p>
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <Button asChild size="lg" className="px-8 font-medium">
-                <a href="#catalog">Explore Collection</a>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="px-8 font-medium">
-                <a href="#features">Our Story</a>
-              </Button>
-            </div>
-            <div className="mt-8 flex flex-wrap gap-6">
-              <div className="flex items-center gap-2">
-                <Truck className="h-4 w-4 text-primary" />
-                <span className="text-xs text-muted-foreground">Free Shipping</span>
+            {/* Modern Ambient Hero Section */}
+      <section className="relative overflow-hidden border-b border-border/40 bg-gradient-to-b from-primary/[0.03] via-background to-background pt-12 pb-20 md:pt-20 md:pb-28">
+        {/* Ambient Glow */}
+        <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[500px] w-[600px] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
+
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
+            {/* Left Content */}
+            <div className="lg:col-span-7">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1.5 text-xs font-medium text-primary shadow-xs backdrop-blur-md">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+                </span>
+                Handcrafted & Sustainable Collection 2026
               </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-primary" />
-                <span className="text-xs text-muted-foreground">Secure Payments</span>
+
+              <h1 className="mt-6 font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.12]">
+                Elevate Everyday Living with <span className="text-primary italic">Timeless Craft</span>
+              </h1>
+
+              <p className="mt-6 max-w-xl text-base text-muted-foreground leading-relaxed sm:text-lg">
+                Thoughtfully crafted ceramics, textiles, and acoustic home goods. Built with sustainable materials, fair wages, and express delivery across India.
+              </p>
+
+              <div className="mt-8 flex flex-col gap-3.5 sm:flex-row sm:items-center">
+                <Button asChild size="lg" className="h-12 px-8 rounded-full font-medium shadow-md transition-transform hover:scale-[1.02]">
+                  <a href="#catalog" className="flex items-center gap-2">
+                    Explore Collection
+                    <ArrowRight className="h-4 w-4" />
+                  </a>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="h-12 px-8 rounded-full font-medium">
+                  <a href="#features">Our Philosophy</a>
+                </Button>
               </div>
-              <div className="flex items-center gap-2">
-                <RefreshCw className="h-4 w-4 text-primary" />
-                <span className="text-xs text-muted-foreground">Easy Returns</span>
+
+              {/* Trust Badges Bar */}
+              <div className="mt-12 grid grid-cols-3 gap-4 border-t border-border/50 pt-8 max-w-lg">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Truck className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold">Free Delivery</p>
+                    <p className="text-[11px] text-muted-foreground">Orders over ₹2,999</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <ShieldCheck className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold">Live Stock</p>
+                    <p className="text-[11px] text-muted-foreground">Server verified</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <RefreshCw className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold">Easy Returns</p>
+                    <p className="text-[11px] text-muted-foreground">7 days policy</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="relative">
-            <div className="relative rounded-2xl bg-card shadow-lg transition-transform duration-300 hover:scale-[1.02]">
-              <img
-                src={throwImg}
-                alt="Handcrafted throw"
-                className="w-full h-auto rounded-2xl object-cover aspect-[4/5] md:max-h-[560px]"
-              />
-              <div className="absolute top-4 left-4">
-                <Badge variant="secondary" className="px-3 py-1 font-medium">
-                  Trending Collection
-                </Badge>
+
+            {/* Right Visual Bento Layout */}
+            <div className="relative lg:col-span-5">
+              <div className="relative mx-auto max-w-md lg:max-w-none">
+                {/* Main Hero Card */}
+                <div className="overflow-hidden rounded-3xl border border-border/60 bg-card p-2 shadow-2xl transition-all duration-500 hover:shadow-primary/5">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted">
+                    <img
+                      src={throwImg}
+                      alt="Handcrafted Throw"
+                      className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute bottom-5 left-5 right-5 text-white">
+                      <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium backdrop-blur-md">
+                        Featured Piece
+                      </span>
+                      <h3 className="mt-2 font-display text-xl font-medium">Heirloom Linen Throw</h3>
+                      <p className="text-xs text-white/80">Pure organic handspun flax</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating Glassmorphic Badge 1 (Rating) */}
+                <div className="absolute -left-6 top-8 hidden sm:flex items-center gap-3 rounded-2xl border border-border/50 bg-card/90 p-3 shadow-xl backdrop-blur-md">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500">
+                    <Star className="h-5 w-5 fill-current" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold">4.9 / 5.0 Rating</p>
+                    <p className="text-[11px] text-muted-foreground">Over 1,200+ Happy Homes</p>
+                  </div>
+                </div>
+
+                {/* Floating Glassmorphic Badge 2 (Handmade) */}
+                <div className="absolute -bottom-5 -right-4 flex items-center gap-2.5 rounded-2xl border border-border/50 bg-card/90 px-4 py-3 shadow-xl backdrop-blur-md">
+                  <div className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <p className="text-xs font-semibold">100% Artisan Handmade</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="shop" className="mx-auto max-w-6xl scroll-mt-20 px-6 pb-24">
-        <h2 className="mb-8 font-display text-3xl">Shop all</h2>
-        <div className="flex flex-col gap-4 md:flex-row md:items-end">
-          <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant={cat === null ? "default" : "outline"} onClick={() => setCat(null)}>
-              All
-            </Button>
-            {data.categories.map((c) => (
-              <Button key={c.id} size="sm" variant={cat === c.id ? "default" : "outline"} onClick={() => setCat(c.id)}>
-                {c.name}
-              </Button>
-            ))}
+      {/* Catalog & Filter Section */}
+      <section id="catalog" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-20">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-wider text-primary">Curated Catalog</span>
+            <h2 className="mt-1 font-display text-3xl font-semibold sm:text-4xl">Explore our Collection</h2>
           </div>
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -mt-2.5 h-4 w-4 text-muted-foreground" />
+          <div className="relative w-full max-w-xs">
+            <Search className="absolute left-3.5 top-1/2 -mt-2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search products..."
+              placeholder="Search ceramics, throws..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              className="h-10 rounded-full pl-10 bg-muted/40 text-sm focus-visible:ring-primary/40"
             />
           </div>
         </div>
-        <p className="mt-4 text-sm text-muted-foreground">{shown.length} results</p>
 
-        {shown.length === 0 ? (
-          <Card className="py-20 text-center">
-            <p className="text-muted-foreground">No products match your filters.</p>
-            <Button variant="outline" className="mt-4 px-6 py-3" onClick={() => {
-              setCat(null);
-              setSearchTerm("");
-            }}>
-              Reset filters
+        {/* Category Filter Pills */}
+        <div className="mt-6 flex flex-wrap items-center gap-2 border-b border-border/40 pb-4">
+          <Button
+            size="sm"
+            variant={cat === null ? "default" : "ghost"}
+            onClick={() => setCat(null)}
+            className="rounded-full text-xs"
+          >
+            All Items ({data.products.length})
+          </Button>
+          {data.categories.map((c) => (
+            <Button
+              key={c.id}
+              size="sm"
+              variant={cat === c.id ? "default" : "ghost"}
+              onClick={() => setCat(c.id)}
+              className="rounded-full text-xs"
+            >
+              {c.name}
             </Button>
-          </Card>
-        ) : (
-          <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            {shown.map((p) => <ProductCard key={p.id} product={p} />)}
-          </div>
-        )}
+          ))}
+        </div>
+
+        {/* Products Grid */}
+        <div className="mt-8">
+          {shown.length === 0 ? (
+            <div className="rounded-3xl border border-dashed border-border p-16 text-center">
+              <p className="text-base text-muted-foreground">No pieces match your search or filter.</p>
+              <Button
+                variant="outline"
+                className="mt-4 rounded-full"
+                onClick={() => {
+                  setCat(null);
+                  setSearchTerm("");
+                }}
+              >
+                Reset filters
+              </Button>
+            </div>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {shown.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          )}
+        </div>
       </section>
+
 
       <section id="features" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <h2 className="mb-8 font-display text-3xl text-center">Crafted for Generations</h2>
