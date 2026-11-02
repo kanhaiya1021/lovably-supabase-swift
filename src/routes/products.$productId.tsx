@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ArrowLeft, Minus, Plus, ShoppingBag, Truck, ShieldCheck, RotateCcw } from "lucide-react";
+import { ChevronRight, Minus, Plus, ShoppingCart, Truck, ShieldCheck, RotateCcw, Star, Tag, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/shop/SiteHeader";
 import { SiteFooter } from "@/components/shop/SiteFooter";
@@ -45,6 +45,7 @@ function ProductPage() {
   const { data } = useSuspenseQuery(catalogQuery);
   const product = data.products.find((p) => p.id === productId)!;
   const { add, setOpen } = useCart();
+  const navigate = useNavigate();
   const [variantId, setVariantId] = useState(product.variants[0]!.id);
   const [qty, setQty] = useState(1);
   const variant = (product.variants.find((v) => v.id === variantId) ?? product.variants[0])!;
@@ -59,64 +60,87 @@ function ProductPage() {
     toast.success(`${product.name} added to basket`, { action: { label: "View basket", onClick: () => setOpen(true) } });
   };
 
+  const off = variant.compareAtPrice && variant.compareAtPrice > variant.price
+    ? Math.round(((variant.compareAtPrice - variant.price) / variant.compareAtPrice) * 100) : null;
+  const buyNow = () => { addToCart(); navigate({ to: "/checkout" }); };
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-6xl px-4 py-8 md:py-12">
-        <Link to="/" className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Back to store
-        </Link>
-        <div className="grid gap-10 md:grid-cols-2">
-          <div className="overflow-hidden rounded-2xl bg-muted">
-            <img src={product.image} alt={product.name} className="aspect-[4/5] h-full w-full object-cover" />
+      <main className="mx-auto max-w-7xl px-2 py-3 sm:px-3">
+        <div className="grid gap-6 bg-card p-4 md:grid-cols-[2fr_3fr] md:p-6">
+          <div className="md:sticky md:top-20 md:h-fit">
+            <div className="overflow-hidden border">
+              <img src={product.image} alt={product.name} className="aspect-square w-full object-cover" />
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <Button size="lg" className="h-12 gap-2 rounded-sm bg-highlight font-semibold text-highlight-foreground hover:bg-highlight/90"
+                disabled={variant.available <= 0} onClick={addToCart}>
+                <ShoppingCart className="h-4 w-4" /> ADD TO BASKET
+              </Button>
+              <Button size="lg" className="h-12 gap-2 rounded-sm font-semibold" disabled={variant.available <= 0} onClick={buyNow}>
+                <Zap className="h-4 w-4" /> BUY NOW
+              </Button>
+            </div>
           </div>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-5">
+            <nav className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Link to="/" className="hover:text-primary">Home</Link> <ChevronRight className="h-3 w-3" /> <span className="line-clamp-1">{product.name}</span>
+            </nav>
             <div>
-              <h1 className="font-display text-4xl font-semibold tracking-tight">{product.name}</h1>
-              <div className="mt-3 flex items-baseline gap-3">
-                <span className="text-2xl font-semibold">{formatPrice(variant.price, product.currency)}</span>
-                {variant.compareAtPrice && (
-                  <span className="text-muted-foreground line-through">{formatPrice(variant.compareAtPrice, product.currency)}</span>
-                )}
+              <h1 className="text-xl font-medium md:text-2xl">{product.name}</h1>
+              <div className="mt-2 flex items-center gap-2 text-sm">
+                <span className="inline-flex items-center gap-0.5 rounded-sm bg-success px-1.5 py-0.5 text-xs font-semibold text-success-foreground">4.4 <Star className="h-3 w-3 fill-current" /></span>
+                <span className="text-muted-foreground">24 ratings</span>
+              </div>
+              {off && <p className="mt-3 text-sm font-semibold text-success">Special price</p>}
+              <div className="mt-1 flex items-baseline gap-3">
+                <span className="text-3xl font-semibold">{formatPrice(variant.price, product.currency)}</span>
+                {off && <>
+                  <span className="text-muted-foreground line-through">{formatPrice(variant.compareAtPrice!, product.currency)}</span>
+                  <span className="font-semibold text-success">{off}% off</span>
+                </>}
               </div>
               <p className="mt-1 text-xs text-muted-foreground">Final price confirmed by server at checkout.</p>
             </div>
-            <p className="leading-relaxed text-muted-foreground">{product.description}</p>
+            <div className="space-y-2 text-sm">
+              <p className="font-semibold">Available offers</p>
+              <p className="flex gap-2"><Tag className="h-4 w-4 shrink-0 text-success" /> Free delivery on orders over ₹2,999</p>
+              <p className="flex gap-2"><Tag className="h-4 w-4 shrink-0 text-success" /> 7-day easy returns on every handmade piece</p>
+            </div>
             {product.variants.length > 1 && (
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Option</p>
+              <div className="flex items-start gap-6 text-sm">
+                <p className="w-20 shrink-0 pt-1.5 text-muted-foreground">Option</p>
                 <div className="flex flex-wrap gap-2">
                   {product.variants.map((v) => (
-                    <Button key={v.id} size="sm" className="rounded-full" variant={v.id === variant.id ? "default" : "outline"}
-                      onClick={() => { setVariantId(v.id); setQty(1); }}>
+                    <button key={v.id} onClick={() => { setVariantId(v.id); setQty(1); }}
+                      className={`rounded-sm border-2 px-3 py-1.5 ${v.id === variant.id ? "border-primary font-semibold text-primary" : "border-border"}`}>
                       {v.name}
-                    </Button>
+                    </button>
                   ))}
                 </div>
               </div>
             )}
-            <p className="text-sm font-medium">
-              {variant.available > 0 ? (variant.available <= 5 ? `Only ${variant.available} left` : "In stock") : "Sold out"}
-            </p>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center rounded-full border">
-                <Button size="icon" variant="ghost" className="rounded-full" aria-label="Decrease quantity" disabled={qty <= 1} onClick={() => setQty(qty - 1)}>
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <span className="w-10 text-center tabular-nums">{qty}</span>
-                <Button size="icon" variant="ghost" className="rounded-full" aria-label="Increase quantity" disabled={qty >= max} onClick={() => setQty(qty + 1)}>
-                  <Plus className="h-4 w-4" />
-                </Button>
+            <div className="flex items-center gap-6 text-sm">
+              <p className="w-20 shrink-0 text-muted-foreground">Quantity</p>
+              <div className="flex items-center gap-2">
+                <Button size="icon" variant="outline" className="h-8 w-8 rounded-full" aria-label="Decrease quantity" disabled={qty <= 1} onClick={() => setQty(qty - 1)}><Minus className="h-3 w-3" /></Button>
+                <span className="w-10 border py-1 text-center tabular-nums">{qty}</span>
+                <Button size="icon" variant="outline" className="h-8 w-8 rounded-full" aria-label="Increase quantity" disabled={qty >= max} onClick={() => setQty(qty + 1)}><Plus className="h-3 w-3" /></Button>
               </div>
-              <Button size="lg" className="flex-1 gap-2 rounded-full" disabled={variant.available <= 0} onClick={addToCart}>
-                <ShoppingBag className="h-4 w-4" /> {variant.available <= 0 ? "Sold out" : "Add to basket"}
-              </Button>
+              <span className={`text-sm font-medium ${variant.available <= 5 ? "text-destructive" : "text-success"}`}>
+                {variant.available > 0 ? (variant.available <= 5 ? `Hurry, only ${variant.available} left!` : "In stock") : "Sold out"}
+              </span>
+            </div>
+            <div className="flex items-start gap-6 text-sm">
+              <p className="w-20 shrink-0 text-muted-foreground">Description</p>
+              <p className="leading-relaxed">{product.description}</p>
             </div>
             {product.demo && <p className="text-xs text-muted-foreground">Sample item — not for sale.</p>}
-            <ul className="grid gap-3 border-t pt-6 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2"><Truck className="h-4 w-4" /> Free delivery over ₹2,999</li>
-              <li className="flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> Secure, server-verified checkout</li>
-              <li className="flex items-center gap-2"><RotateCcw className="h-4 w-4" /> Easy returns</li>
+            <ul className="grid grid-cols-3 gap-3 border-t pt-5 text-center text-xs">
+              <li className="flex flex-col items-center gap-1"><Truck className="h-5 w-5 text-primary" /> Free delivery over ₹2,999</li>
+              <li className="flex flex-col items-center gap-1"><ShieldCheck className="h-5 w-5 text-primary" /> Server-verified checkout</li>
+              <li className="flex flex-col items-center gap-1"><RotateCcw className="h-5 w-5 text-primary" /> 7-day returns</li>
             </ul>
           </div>
         </div>
