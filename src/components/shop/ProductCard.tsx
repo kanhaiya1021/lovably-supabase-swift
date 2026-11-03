@@ -24,7 +24,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
   };
 
   return (
-    <article className="group relative flex flex-col bg-card p-4 transition-shadow hover:z-10 hover:shadow-xl">
+    <article className="group relative flex flex-col border-b border-r bg-card p-4 transition-shadow hover:z-10 hover:shadow-xl">
       <div className="relative mx-auto aspect-square w-full overflow-hidden">
         <img src={product.image} alt={product.name} loading="lazy" width={400} height={400}
           className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${soldOut ? "opacity-50" : ""}`} />
