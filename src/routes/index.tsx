@@ -15,8 +15,8 @@ import mugImg from "@/assets/p-mug.jpg";
 type Sort = "relevance" | "low" | "high" | "discount";
 
 export const Route = createFileRoute("/")({
-  validateSearch: (s: Record<string, unknown>): { q?: string } => ({
-    q: typeof s.q === "string" && s.q ? s.q : undefined,
+  validateSearch: (s: Record<string, unknown>): { q?: string | undefined } => ({
+    q: typeof s["q"] === "string" && s["q"] ? (s["q"] as string) : undefined,
   }),
   head: () => ({
     meta: [

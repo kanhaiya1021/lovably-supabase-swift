@@ -3,10 +3,10 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Search, ShoppingCart, User, Store } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
-export function SiteHeader({ initialQuery = "" }: { initialQuery?: string }) {
+export function SiteHeader({ initialQuery }: { initialQuery?: string | undefined }) {
   const { count, setOpen } = useCart();
   const navigate = useNavigate();
-  const [q, setQ] = useState(initialQuery);
+  const [q, setQ] = useState(initialQuery ?? "");
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
