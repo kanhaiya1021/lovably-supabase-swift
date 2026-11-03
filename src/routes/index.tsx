@@ -15,8 +15,8 @@ import mugImg from "@/assets/p-mug.jpg";
 type Sort = "relevance" | "low" | "high" | "discount";
 
 export const Route = createFileRoute("/")({
-  validateSearch: (s: Record<string, unknown>): { q?: string } => ({
-    q: typeof s.q === "string" && s.q ? s.q : undefined,
+  validateSearch: (s: Record<string, unknown>): { q?: string | undefined } => ({
+    q: typeof s["q"] === "string" && s["q"] ? (s["q"] as string) : undefined,
   }),
   head: () => ({
     meta: [
@@ -188,7 +188,7 @@ function Index() {
                 <button className="text-primary underline" onClick={() => { setCat(null); setInStock(false); navigate({ to: "/", search: {} }); }}>Clear filters</button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-3 lg:grid-cols-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
                 {shown.map((p) => <ProductCard key={p.id} product={p} />)}
               </div>
             )}
