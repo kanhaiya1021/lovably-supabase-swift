@@ -191,6 +191,9 @@ function Account() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Button asChild size="sm" className="rounded-lg">
+              <Link to="/admin">Admin Panel</Link>
+            </Button>
             <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-2 rounded-lg">
               <LogOut className="h-4 w-4" />
               Sign out
