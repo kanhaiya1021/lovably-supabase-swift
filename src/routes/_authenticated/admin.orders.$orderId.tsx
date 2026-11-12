@@ -42,7 +42,7 @@ function OrderDetail() {
   if (isLoading) return <Loader2 className="mx-auto mt-10 h-6 w-6 animate-spin" />;
   if (!o) return <p className="rounded-lg bg-card p-6 text-center">Order not found. <Link to="/admin/orders" className="text-primary">Back</Link></p>;
 
-  const a = o.shipping_address as Record<string, string>;
+  const a = o.shipping_address as { full_name?: string; line1?: string; line2?: string; city?: string; state?: string; postal_code?: string; phone?: string };
   const events = [...o.order_status_events].sort((x, y) => x.created_at.localeCompare(y.created_at));
   const coupon = Array.isArray(o.coupons) ? o.coupons[0] : o.coupons;
 
