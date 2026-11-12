@@ -639,6 +639,14 @@ export type Database = {
           total_spent: number
         }[]
       }
+      claim_coupon: {
+        Args: { p_code: string; p_subtotal: number }
+        Returns: {
+          coupon_code: string
+          coupon_id: string
+          discount_total: number
+        }[]
+      }
       commit_inventory: {
         Args: { _qty: number; _variant_id: string }
         Returns: undefined
@@ -649,6 +657,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      release_coupon_claim: {
+        Args: { p_coupon_id: string }
+        Returns: undefined
       }
       release_inventory: {
         Args: { _qty: number; _variant_id: string }
