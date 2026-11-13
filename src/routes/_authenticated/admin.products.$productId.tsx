@@ -164,13 +164,13 @@ function ProductEditor() {
 
           <section className="rounded-lg bg-card p-4 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <h2 className="font-semibold">Options, price & stock</h2>
-              <Button type="button" size="sm" variant="outline" onClick={() => set({ variants: [...form.variants, { ...emptyVariant(), name: "" }] })}><Plus className="mr-1 h-4 w-4" />Add option</Button>
+              <h2 className="font-semibold">Variants, price & stock</h2>
+              <Button type="button" size="sm" variant="outline" onClick={() => set({ variants: [...form.variants, { ...emptyVariant(), name: "" }] })}><Plus className="mr-1 h-4 w-4" />Add variant</Button>
             </div>
             <div className="space-y-3">
               {form.variants.map((v, i) => (
                 <div key={v.id ?? `new-${i}`} className="grid grid-cols-2 gap-2 rounded-md bg-muted/50 p-3 text-sm sm:grid-cols-6">
-                  <div className="col-span-2"><Label>Option name</Label><Input value={v.name} onChange={(e) => setV(i, { name: e.target.value })} placeholder="e.g. 350 ml / Ochre" /></div>
+                  <div className="col-span-2"><Label>Variant name</Label><Input value={v.name} onChange={(e) => setV(i, { name: e.target.value })} placeholder="e.g. 350 ml / Ochre" /></div>
                   <div><Label>SKU</Label><Input value={v.sku} onChange={(e) => setV(i, { sku: e.target.value })} /></div>
                   <div><Label>Price ₹</Label><Input inputMode="decimal" value={v.price} onChange={(e) => setV(i, { price: e.target.value })} /></div>
                   <div><Label>MRP ₹</Label><Input inputMode="decimal" value={v.compare_at_price} onChange={(e) => setV(i, { compare_at_price: e.target.value })} placeholder="optional" /></div>
