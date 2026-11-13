@@ -658,6 +658,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      preview_coupon: {
+        Args: { p_code: string; p_subtotal: number }
+        Returns: {
+          coupon_code: string
+          coupon_id: string
+          discount_total: number
+        }[]
+      }
       release_coupon_claim: {
         Args: { p_coupon_id: string }
         Returns: undefined

@@ -43,8 +43,69 @@ function Checkout() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponFeedback, setCouponFeedback] = useState<{ kind: "success" | "error"; message: string } | null>(null);
+  const [couponBusy, setCouponBusy] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    id: string;
+    code: string;
+    discountTotal: number;
+    subtotal: number;
+    deliveryFee: number;
+    total: number;
+    fingerprint: string;
+  } | null>(null);
+  const cartFingerprint = realLines.map((line) => `${line.variantId}:${line.quantity}`).join(",");
+  const currentCoupon = appliedCoupon?.fingerprint === cartFingerprint ? appliedCoupon : null;
   // One key per checkout visit: a double-click or retry never creates two orders.
   const [idempotencyKey] = useState(() => crypto.randomUUID());
+
+  async function applyCoupon(e: React.FormEvent) {
+    e.preventDefault();
+    setCouponFeedback(null);
+    const code = couponCode.trim().toUpperCase();
+    if (!code) {
+      setCouponFeedback({ kind: "error", message: "Enter a coupon code." });
+      return;
+    }
+    if (verification.status !== "verified") {
+      setCouponFeedback({ kind: "error", message: "Wait for the basket price and stock check to finish." });
+      return;
+    }
+
+    setCouponBusy(true);
+    const { data, error } = await supabase.functions.invoke<{
+      valid: boolean;
+      coupon?: { id: string; code: string; discountTotal: number };
+      totals?: { subtotal: number; shippingTotal: number; total: number };
+    }>("create-order", {
+      body: {
+        action: "preview-coupon",
+        couponCode: code,
+        items: realLines.map((line) => ({ variantId: line.variantId, quantity: line.quantity })),
+      },
+    });
+    setCouponBusy(false);
+    if (error || !data?.valid || !data.coupon || !data.totals) {
+      setAppliedCoupon(null);
+      setCouponFeedback({
+        kind: "error",
+        message: error ? await readFunctionError(error, "Could not check that coupon. Please try again.") : "That coupon could not be applied.",
+      });
+      return;
+    }
+    setAppliedCoupon({
+      id: data.coupon.id,
+      code: data.coupon.code,
+      discountTotal: data.coupon.discountTotal,
+      subtotal: data.totals.subtotal,
+      deliveryFee: data.totals.shippingTotal,
+      total: data.totals.total,
+      fingerprint: cartFingerprint,
+    });
+    setCouponCode(data.coupon.code);
+    setCouponFeedback({ kind: "success", message: `${data.coupon.code} applied. You save ${formatPrice(data.coupon.discountTotal, "INR")} .` });
+  }
 
   async function placeOrder(e: React.FormEvent) {
     e.preventDefault();
@@ -63,6 +124,7 @@ function Checkout() {
         items: realLines.map((l) => ({ variantId: l.variantId, quantity: l.quantity })),
         shippingAddress: { ...parsed.data, country: "IN" },
         idempotencyKey,
+        couponCode: currentCoupon?.code,
       },
     });
     if (error || !data?.order) {
@@ -84,7 +146,7 @@ function Checkout() {
     );
   }
 
-  const canSubmit = verification.status === "verified" && !submitting;
+  const canSubmit = verification.status === "verified" && !submitting && !couponBusy;
 
   return (
     <main className="mx-auto grid max-w-5xl gap-10 px-6 py-12 md:grid-cols-[1fr_380px]">
@@ -132,6 +194,33 @@ function Checkout() {
             </li>
           ))}
         </ul>
+        <form onSubmit={applyCoupon} className="space-y-2 border-t pt-4">
+          <Label htmlFor="checkout-coupon">Coupon code</Label>
+          <div className="flex gap-2">
+            <Input
+              id="checkout-coupon"
+              value={couponCode}
+              onChange={(e) => {
+                setCouponCode(e.target.value.toUpperCase());
+                setAppliedCoupon(null);
+                setCouponFeedback(null);
+              }}
+              placeholder="Enter code"
+              autoComplete="off"
+              disabled={couponBusy || submitting}
+              aria-describedby={couponFeedback ? "coupon-feedback" : undefined}
+            />
+            <Button type="submit" variant="outline" disabled={couponBusy || submitting || verification.status !== "verified"}>
+              {couponBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
+            </Button>
+          </div>
+          {couponFeedback && (
+            <p id="coupon-feedback" role="status" className={`text-xs ${couponFeedback.kind === "error" ? "text-destructive" : "text-primary"}`}>
+              {couponFeedback.message}
+            </p>
+          )}
+          {appliedCoupon && !currentCoupon && <p className="text-xs text-muted-foreground">Basket changed. Apply the coupon again to refresh it.</p>}
+        </form>
         <div className="border-t pt-4">
           {verification.status === "verifying" && (
             <p className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Checking prices &amp; stock…</p>
@@ -139,9 +228,10 @@ function Checkout() {
           {verification.status === "verified" && (
             <div className="space-y-1 text-sm">
               <p className="flex items-center gap-2 text-primary"><ShieldCheck className="h-4 w-4" /> Verified by server</p>
-              <div className="flex justify-between"><span>Subtotal</span><span>{formatPrice(verification.subtotal, verification.currency)}</span></div>
-              <div className="flex justify-between"><span>Delivery</span><span>{verification.deliveryFee === 0 ? "Free" : formatPrice(verification.deliveryFee, verification.currency)}</span></div>
-              <div className="flex justify-between pt-2 text-lg font-semibold"><span>Total</span><span>{formatPrice(verification.total, verification.currency)}</span></div>
+              <div className="flex justify-between"><span>Subtotal</span><span>{formatPrice(currentCoupon?.subtotal ?? verification.subtotal, verification.currency)}</span></div>
+              <div className="flex justify-between"><span>Delivery</span><span>{(currentCoupon?.deliveryFee ?? verification.deliveryFee) === 0 ? "Free" : formatPrice(currentCoupon?.deliveryFee ?? verification.deliveryFee, verification.currency)}</span></div>
+              {currentCoupon && <div className="flex justify-between text-primary"><span>Coupon ({currentCoupon.code})</span><span>− {formatPrice(currentCoupon.discountTotal, verification.currency)}</span></div>}
+              <div className="flex justify-between pt-2 text-lg font-semibold"><span>Total</span><span>{formatPrice(currentCoupon?.total ?? verification.total, verification.currency)}</span></div>
             </div>
           )}
           {(verification.status === "issue" || verification.status === "error") && (

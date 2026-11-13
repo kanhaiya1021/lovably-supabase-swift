@@ -13,7 +13,7 @@ export const addressSchema = z.object({
 export type ShippingAddress = z.infer<typeof addressSchema>;
 
 /** Reads the JSON error message from a failed supabase.functions.invoke call. */
-export async function readFunctionError(error: unknown): Promise<string> {
+export async function readFunctionError(error: unknown, fallback = "Could not place your order. Please try again."): Promise<string> {
   const ctx = (error as { context?: Response })?.context;
   if (ctx && typeof ctx.json === "function") {
     try {
@@ -21,5 +21,5 @@ export async function readFunctionError(error: unknown): Promise<string> {
       if (body?.error) return String(body.error);
     } catch { /* not json */ }
   }
-  return "Could not place your order. Please try again.";
+  return fallback;
 }
